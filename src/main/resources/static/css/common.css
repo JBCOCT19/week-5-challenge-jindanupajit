@@ -1,0 +1,37 @@
+body {
+    background-color: aliceblue;
+}
+.img-container.img-square{
+
+}
+.img-container img{
+    height: 50px;
+    width: 50px;
+}
+
+a.color-navy {
+    color: #3b5557;
+}
+
+a.color-navy:hover {
+    color: #64698f;
+    text-decoration: none;
+}
+.view .editable {
+    visibility: hidden;
+    display: none;
+}
+
+.view .display {
+    visibility: visible;
+    display: inline-block;
+}
+.edit .editable {
+    visibility: visible;
+    display: inline-block;
+}
+
+.edit .display {
+    visibility: hidden;
+    display: none;
+}

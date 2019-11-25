@@ -1,0 +1,13 @@
+#job-form.container {
+    max-width: 500px;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+}
+
+#job-view-all.container {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+}
+.job-view-partial.card {
+
+}

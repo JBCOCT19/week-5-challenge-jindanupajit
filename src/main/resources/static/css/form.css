@@ -1,0 +1,33 @@
+[type="date"] {
+    background:#fff
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3ElEQVR4Xp1PQaqDQAzNDAqCoEUQBEHrStBF8QS9Qm/Q3kSP1CP9G/RvXGqat8hiENHpg8d7SeaFCSmGYUiFHyFDtX80t2qYmZZluazr+oJq/9S867qx73sGxT+hW27nyJm2bVNjzD/9iABfk2/BP3wWSQ5nvAlomobJD26uqipdoHWNHrjnnVxZls4C7YFHnoCiKHxPcHN5nrOwhp71miMgyzJW9fUEJEnifYLmDEwcx1hwFf6h3vPzPBtSaA6IoohVD7zCyVEYhhwEwY08IO/vyBkU1tpRZCJ/TF9TFpEyCDAkNQAAAABJRU5ErkJggg==')
+    97% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+    display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+}
+[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0;
+}
+
+input {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3b5557;
+    padding-left: 2px;
+
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-group input {
+    width: 100%
+}
+
+
