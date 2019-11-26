@@ -1,6 +1,7 @@
 package jbc.oct21.jindanupajit.jobposting.controller;
 
 import jbc.oct21.jindanupajit.jobposting.model.Job;
+import jbc.oct21.jindanupajit.jobposting.model.UserDetail;
 import jbc.oct21.jindanupajit.jobposting.model.repository.JobRepository;
 import jbc.oct21.jindanupajit.jobposting.model.repository.UserDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,40 +24,35 @@ public class SearchProcessController {
     @GetMapping("/search")
     public String search(Model model, @RequestParam("q") String query) {
         // Contain only interested job.id
-//        HashSet<Long> jobIdCollection = new HashSet<>();
-//
-//        List<String> keywords = Arrays.asList(query.split(" "));
-//
-//
-//        // Search and add each record to jobIdCollection
-//        for (String eachKeyword : keywords) {
-//            searchTitleAndDescription(eachKeyword).forEach(jobIdCollection::add);
-//        }
-//
-//
-//        // Now get all the objects with those ids
-//        Iterable<Job> jobCollection = jobRepository.findAllByIdOrderByPostedDateDesc(jobIdCollection);
+        HashSet<Job> jobCollection = new HashSet<>();
 
-        Iterable<Job> jobCollection = jobRepository.findAllByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
+        List<String> keywords = Arrays.asList(query.split(" "));
+
+        // Search each scenario and add each record to jobIdCollection
+        for (String eachKeyword : keywords) {
+            searchTitleAndDescription(eachKeyword).forEach(jobCollection::add);
+            searchAuthor(eachKeyword).forEach(jobCollection::add);
+        }
+
         model.addAttribute("jobCollection", jobCollection);
         model.addAttribute("mode", "view");
 
         return "view";
     }
 
-    private Iterable<Long> searchTitleAndDescription(String query) {
-        /*
-         * Get only the job.id not the whole object
-         * Note the findIdby... not findAllBy (findBy)
-         */
-        return jobRepository.findIdByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query, query);
+    private Iterable<Job> searchTitleAndDescription(String query) {
+
+        return jobRepository.findAllByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query, query);
     }
 
-    private Iterable<Long> searchAuthor(String query) {
-        /*
-         * Get only the job.id not the whole object
-         * Note the findIdby... not findAllBy (findBy)
-         */
-        return userDetailRepository.findIdByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(query, query);
+
+
+    private Iterable<Job> searchAuthor(String query) {
+
+        HashSet<Job> jobCollection = new HashSet<>();
+        Iterable<UserDetail> userCollection = userDetailRepository.findAllByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(query, query);
+        userCollection.forEach((user) -> jobRepository.findAllByAuthor(user).forEach(jobCollection::add));
+
+        return jobCollection;
     }
 }

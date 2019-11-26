@@ -1,0 +1,3 @@
+2019-11-26 08:52:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "ROW (10033, 10001)"; SQL statement:
+select job0_.id as id1_1_, job0_.author_id as author_i6_1_, job0_.cloudinary_image_id as cloudina7_1_, job0_.description as descript2_1_, job0_.phone as phone3_1_, job0_.posted_date as posted_d4_1_, job0_.title as title5_1_ from job job0_ where job0_.id=(? , ?) order by job0_.posted_date desc [22018-200]

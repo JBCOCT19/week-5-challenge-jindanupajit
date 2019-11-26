@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDetailRepository extends CrudRepository<UserDetail, Long> {
     UserDetail findByUsername(String username);
-    Iterable<Long> findIdByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(String username, String displayName);
+    Iterable<UserDetail> findAllByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(String username, String displayName);
 }

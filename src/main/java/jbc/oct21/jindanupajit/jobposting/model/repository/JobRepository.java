@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JobRepository extends CrudRepository<Job, Long> {
 
-    Iterable<Job> findAllByIdOrderByPostedDateDesc(Iterable<Long> allId);
-    Iterable<Long> findIdByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description);
-    Iterable<Long> findIdByAuthor(Iterable<UserDetail> allAuthor);
+    Iterable<Job> findAllByIdOrderByPostedDateDesc(Iterable<Long> iterable);
     Iterable<Job> findAllByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title, String description);
+    Iterable<Job> findAllByAuthor(UserDetail author);
+
 }
