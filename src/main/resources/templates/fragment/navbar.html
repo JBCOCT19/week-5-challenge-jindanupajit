@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar</title>
+</head>
+<body>
+<!--/* @thymesVar id="label" type="java.lang.String" */-->
+<!--/* @thymesVar id="baseDir" type="java.lang.String" */-->
+<!--/* @thymesVar id="crudName" type="java.lang.String" */-->
+<!--/* @thymesVar id="crudItem" type="jbc.oct21.jindanupajit.flightapplication.model.FlightSchedule" */-->
+<!--/* @thymesVar id="WebSecurityEnabled" type="java.lang.Boolean" */-->
+<div th:fragment="navbar (label, baseDir, crudName, crudItem)">
+    <nav class="navbar navbar-expand-md navbar-dark navbar-purple"
+         th:with="brandLink=@{/}, brandLabel=${label}">
+        <a class="navbar-brand" th:href="${brandLink}" th:text="*{brandLabel}">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div  class="collapse navbar-collapse" id="navbarSupportedContent" >
+
+            <ul class="navbar-nav mr-auto">
+                <th:block th:if="${WebSecurityEnabled}">
+                    <th:block  th:replace="::nav-item-link (label=${'Login'}, link=@{/login}, isActive=${false})">
+                        ... </th:block>
+                </th:block>
+                <th:block th:if="${crudItem}">
+                    <th:block th:replace="::nav-item-crud(
+                        label=${crudName},
+                        baseUrl=${baseDir},
+                        crudId=${crudItem.id})">...</th:block>
+                </th:block>
+                <th:block th:unless="${crudItem}">
+                    <th:block th:replace="::nav-item-crud(
+                        label=${crudName},
+                        baseUrl=${baseDir},
+                        crudId=${0})">...</th:block>
+                </th:block>
+            </ul>
+            <form class="form-inline my-2 my-md-0"  th:action="@{/search}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
+
+<!--/* @thymesVar id="label" type="java.lang.String" */-->
+<!--/* @thymesVar id="link" type="java.lang.String" */-->
+<!--/* @thymesVar id="isActive" type="java.lang.Boolean" */-->
+<!--/* @thymesVar id="crudId" type="java.lang.Long" */-->
+<!--/* @thymesVar id="baseUrl" type="java.lang.String" */-->
+<ul th:remove="all">
+
+    <li th:fragment="nav-item-link (label, link, isActive)" >
+        <span th:class="${isActive?'active':''}" class="nav-item">
+            <a class="nav-link" th:href="${link}" th:text="${label}">Label</a>
+        </span>
+    </li>
+    <li th:fragment="nav-item-dropdown-item (label, link, isActive)" class="nav-item" th:remove="tag">
+        <div th:classappend="${isActive?'active':''}" class="dropdown-item">
+            <a class="nav-link" th:href="${link}" th:text="${label}">Label</a>
+        </div>
+    </li>
+    <li th:fragment="nav-item-dropdown-devider" class="nav-item" th:remove="tag">
+        <div class="dropdown-divider"></div>
+    </li>
+    <li th:fragment="nav-item-crud (label, baseUrl, crudId)" class="nav-item dropdown">
+        <th:block th:replace="fragment/modal::dialog (
+                    id='delete-dialog',
+                    title='Delete This '+${label},
+                    body='Do you want to permanently delete this '+${label}+'?',
+                    url=@{/{base}/process/delete/{fid}(base=${baseUrl},fid=${crudId})},
+                    caption='Delete '+${label},
+                    btnClass='btn-danger')"> ... </th:block>
+        <th:block th:replace="fragment/modal::dialog (
+                    id='create-dialog',
+                    title='Post a new '+${label},
+                    body='Do you want to post a new '+${label}+'?',
+                    url=@{/{base}/view/0/editable(base=${baseUrl})},
+                    caption='New '+${label},
+                    btnClass='btn-success')"> ... </th:block>
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${label}">Label</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <th:block th:replace="::nav-item-dropdown-item (
+                    label=${'View All '+label},
+                    link=@{/{base}/view/all(base=${baseUrl})},
+                    isActive=${false} )">...</th:block>
+            <th:block th:replace="::nav-item-dropdown-item (
+                    label=${'Create New '+label},
+                    link='javascript:$(\'#create-dialog\').modal(\'show\');',
+                    isActive=${false} )">...</th:block>
+            <th:block th:replace="::nav-item-dropdown-devider">---</th:block>
+            <th:block th:if="${crudId != 0}">
+                <th:block th:replace="::nav-item-dropdown-item (
+                    label=${'Edit This '+label},
+                    link=@{/{base}/view/{fid}/editable(base=${baseUrl},fid=${crudId})},
+                    isActive=${false} )">...</th:block>
+                <th:block th:replace="::nav-item-dropdown-item (
+                    label=${'Delete This '+label},
+                    link='javascript:$(\'#delete-dialog\').modal(\'show\');',
+                    isActive=${false} )">...</th:block>
+
+            </th:block>
+            <th:block th:if="${crudId == 0}">
+
+            <th:block>
+        </div>
+    </li>
+</ul>
+
+</body>
+</html>

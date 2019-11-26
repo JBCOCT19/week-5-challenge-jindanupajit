@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job</title>
+
+    <!--  Bootstrap 4.3.1  -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+<!--/*@thymesVar id="job" type="jbc.oct21.jindanupajit.jobposting.model.Job"*/-->
+<!--/*@thymesVar id="jobCollection" type="java.lang.Iterable<jbc.oct21.jindanupajit.jobposting.model.Job>"*/-->
+<th:block th:fragment="view-all (jobCollection)">
+    <div id="job-view-all" class="container">
+        <th:block th:each="job : ${jobCollection}">
+            <th:block th:replace=":: view-partial(job = ${job})">...</th:block>
+        </th:block>
+    </div>
+</th:block>
+
+<th:block th:fragment="view-partial (job)">
+    <div th:id="${'job-view-partial-'+job.id}" class="job-view-partial card my-2">
+        <h2 th:text="${job.title}">Title</h2>
+        <div><small><span th:text="${job.author.displayName}">Job Poster</span></small></div>
+        <hr />
+        <div th:text="${job.description}">
+            ... ... ... ... ... ...
+            CONTENT
+            ... ... ... ... ... ...
+        </div>
+        <a th:href="@{/job/view/{id}(id=${job.id})}" class="stretched-link"></a>
+    </div>
+</th:block>
+
+<th:block th:fragment="view-full (job)">
+    <div id="job-view-full" class="container">
+        <h2 th:text="${job.title}">Title</h2>
+        <div><small>
+            by <span th:text="${job.author.displayName}">Job Poster</span>
+            (<a th:href="@{tel:{number}(number=${job.phone})}" th:text="${job.phone}">555-555-6789</a>)
+            on <span th:text="${#temporals.format(job.postedDate,'MMM dd, YYYY')}">MMM dd, YYYY</span>
+        </small></div>
+        <hr />
+        <div th:text="${job.description}">
+            ... ... ... ... ... ...
+                    CONTENT
+            ... ... ... ... ... ...
+        </div>
+        <div th:if="${job.cloudinaryImage}">
+            <img th:src="${job.cloudinaryImage.url}" />
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="view">
+    <th:block th:unless="${job}">
+        <th:block th:replace=":: view-all (jobCollection = ${jobCollection})">...</th:block>
+    </th:block>
+    <th:block th:if="${job}">
+        <th:block th:replace=":: view-full (job = ${job})">...</th:block>
+    </th:block>
+
+</th:block>
+
+<th:block th:fragment="edit">
+    <!-- fragment/job :: edit -->
+    <th:block th:replace="fragment/modal::dialog (
+                    id='discard-dialog',
+                    title='Discard this modification',
+                    body='Do you want to discard this modification?',
+                    url=@{/},
+                    caption='Discard',
+                    btnClass='btn-danger')"> ... </th:block>
+    <th:block th:replace="fragment/modal::dialog (
+                    id='reset-dialog',
+                    title='Reset this form',
+                    body='Do you want to reset this form?',
+                    url='javascript:$(\'#form\').reset();',
+                    caption='Reset',
+                    btnClass='btn-warning')"> ... </th:block>
+    <th:block th:replace="fragment/modal::dialog (
+                    id='submit-dialog',
+                    title='Submit this form',
+                    body='Do you want to submit this form?',
+                    url='javascript:$(\'#form\').submit();',
+                    caption='Submit',
+                    btnClass='btn-success')"> ... </th:block>
+    <div id="job-form" class="container">
+
+        <form id="form" th:action="@{/job/process/edit}" th:object="${job}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:replace="fragment/form::input-hidden-field (
+                    field='job.id')" />
+            <input type="hidden" th:replace="fragment/form::input-hidden-field (
+                    field='job.author')" />
+            <input type="hidden" th:replace="fragment/form::input-hidden-field (
+                    field='job.cloudinaryImage')" />
+            <div class="form-group">
+                <label for="job-title">Title</label>
+                <input id="job-title" th:replace="fragment/form::input-text-field (
+                    name='job-title',
+                    placeHolder='Title',
+                    field='job.title')" />
+            </div>
+            <div class="form-group">
+                <label for="job-description">Description</label>
+                <input id="job-description" th:replace="fragment/form::input-text-field (
+                    name='job-description',
+                    placeHolder='Description',
+                    field='job.description')" />
+            </div>
+            <div class="form-group">
+                <label for="job-phone">Phone</label>
+                <input id="job-phone" th:replace="fragment/form::input-text-field (
+                    name='job-phone',
+                    placeHolder='Phone',
+                    field='job.phone')" />
+            </div>
+            <div class="form-group">
+                <label for="job-image">Picture</label>
+                <input id="job-image" th:replace="fragment/form::input-file-param (
+                        name='imageFile',
+                        placeHolder='Image File',
+                        accept='image/*')" />
+            </div>
+            <div class="row justify-content-end px-4">
+                <span class="col-3 mr-1"><a href="javascript:$('#discard-dialog').modal('show');"
+                        role="button" class="btn btn-outline-danger w-100">Discard</a></span>
+                <span class="col-3 mr-1"><a href="javascript:$('#reset-dialog').modal('show');"
+                        role="button" class="btn btn-outline-warning w-100">Reset</a></span>
+                <span class="col-3 mr-1"><a href="javascript:$('#submit-dialog').modal('show');"
+                        onclick="alert('You are about to submit this form!\n\nNote: This alert dialog is popup per assignment\'s requirement.\neven it is so ugly!');"
+                        role="button" class="btn btn-success w-100">Save</a></span>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!--  Bootstrap 4.3.1  -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
