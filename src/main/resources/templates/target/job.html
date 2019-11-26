@@ -77,7 +77,7 @@
                     id='reset-dialog',
                     title='Reset this form',
                     body='Do you want to reset this form?',
-                    url='javascript:$(\'#form\').reset();',
+                    url='javascript:$(\'#form\').trigger(\'reset\');$(\'#reset-dialog\').modal(\'hide\');',
                     caption='Reset',
                     btnClass='btn-warning')"> ... </th:block>
     <th:block th:replace="fragment/modal::dialog (

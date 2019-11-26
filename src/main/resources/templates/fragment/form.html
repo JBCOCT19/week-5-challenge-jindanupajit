@@ -42,8 +42,20 @@
     </th:block>
     <th:block th:fragment="input-file-param (name, placeHolder, accept)">
         <div class="custom-file">
-            <label class="custom-file-label" th:for="${name}" th:text="${placeHolder}">Choose file</label>
-            <input type="file" class="custom-file-input" th:id="${name}" th:name="${name}" th:accept="${accept}">
+            <label th:id="${'label-for-'+name}" class="file-label custom-file-label" th:for="${name}" th:text="${placeHolder}">Choose file</label>
+            <input type="file" class="formcontrol input input-file input-param custom-file-input" th:id="${name}" th:name="${name}" th:accept="${accept}">
+            <script th:inline="text">
+                $('#[[${name}]]').on('change', function(){
+                    // Show only filename not folder (/->linux \->window)
+                    var fileName = $(this).val().split('/').pop().split('\\').pop();
+                    if (fileName.length > 35) {
+                        var o = fileName;
+                        fileName = o.substr(0,15)+"....."+o.substr(-15);
+                    }
+
+                    $('#label-for-[[${name}]]').html(fileName);
+                })
+            </script>
         </div>
     </th:block>
 </body>
